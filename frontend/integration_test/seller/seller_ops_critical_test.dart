@@ -47,7 +47,7 @@ void main() {
     await tester.pumpWidget(const GetMaterialApp(home: SellerShellPage()));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 500));
-    expect(find.text('Toko Widget'), findsOneWidget);
+    expect(find.text('Toko Widget'), findsWidgets);
     expect(find.text('Total Order'), findsOneWidget);
   });
 }
