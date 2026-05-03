@@ -13,7 +13,9 @@ class OrdersPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(OrdersController());
+    final controller = Get.isRegistered<OrdersController>()
+        ? Get.find<OrdersController>()
+        : Get.put(OrdersController());
 
     return Scaffold(
       backgroundColor: AppColors.warmCream,

@@ -9,7 +9,10 @@ import '../../data/models/notification_settings_model.dart';
 import '../../data/models/profile_model.dart';
 
 class ProfileController extends GetxController {
-  final ProfileRemoteDatasource _remote = ProfileRemoteDatasource();
+  ProfileController({ProfileDatasource? datasource})
+      : _remote = datasource ?? ProfileRemoteDatasource();
+
+  final ProfileDatasource _remote;
 
   final isLoading = false.obs;
   final isSaving = false.obs;

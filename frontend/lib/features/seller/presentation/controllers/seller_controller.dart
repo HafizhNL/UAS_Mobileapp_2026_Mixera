@@ -7,7 +7,13 @@ import '../../../shop/data/models/product_model.dart';
 import '../../data/datasources/seller_remote_datasource.dart';
 
 class SellerController extends GetxController {
-  final SellerRemoteDatasource _api = SellerRemoteDatasource();
+  SellerController({SellerDatasource? datasource})
+      : _api = datasource ?? SellerRemoteDatasource();
+
+  final SellerDatasource _api;
+
+  /// Same [SellerDatasource] instance the controller uses (dashboard, finance tab, etc.).
+  SellerDatasource get sellerDatasource => _api;
 
   final storeName = ''.obs;
   final shipFromPostalCode = ''.obs;

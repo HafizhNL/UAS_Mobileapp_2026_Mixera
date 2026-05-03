@@ -5,7 +5,17 @@ import '../../../../core/network/authenticated_dio.dart';
 import '../models/cart_item_model.dart';
 import '../models/cart_summary_model.dart';
 
-class CartRemoteDatasource {
+/// Remote cart API — injectable for tests (`CartController`).
+abstract class CartDatasource {
+  Future<CartSummaryModel> getCart();
+  Future<CartItemModel> addItem(int variantId, int quantity);
+  Future<CartItemModel> updateItem(int id, int quantity);
+  Future<void> removeItem(int id);
+  Future<void> clearCart();
+  Future<Map<String, dynamic>> postShippingQuote({int? addressId, String? destinationPostalCode});
+}
+
+class CartRemoteDatasource implements CartDatasource {
   CartRemoteDatasource()
       : _dio = createAuthenticatedDio(baseUrl: ApiBaseUrl.module('cart'));
 

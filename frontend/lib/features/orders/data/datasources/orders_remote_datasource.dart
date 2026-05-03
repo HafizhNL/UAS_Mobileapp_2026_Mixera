@@ -5,7 +5,13 @@ import '../../../../core/network/authenticated_dio.dart';
 import '../../../checkout/data/models/order_model.dart';
 import '../models/tracking_model.dart';
 
-class OrdersRemoteDatasource {
+abstract class OrdersDatasource {
+  Future<List<OrderModel>> getOrders();
+  Future<OrderModel> getOrderDetail(int id);
+  Future<TrackingModel> getTracking(int orderId);
+}
+
+class OrdersRemoteDatasource implements OrdersDatasource {
   OrdersRemoteDatasource()
       : _dio = createAuthenticatedDio(baseUrl: ApiBaseUrl.module('orders'));
 

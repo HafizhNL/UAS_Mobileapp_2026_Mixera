@@ -22,7 +22,13 @@ enum Card3DSResult { success, pending, failed, cancelled, staleRedirect }
 
 class Card3DSPage extends StatefulWidget {
   final Card3DSArgs args;
-  const Card3DSPage({super.key, required this.args});
+  final CardPaymentDatasource? cardPaymentDatasource;
+
+  const Card3DSPage({
+    super.key,
+    required this.args,
+    this.cardPaymentDatasource,
+  });
 
   @override
   State<Card3DSPage> createState() => _Card3DSPageState();
@@ -30,6 +36,7 @@ class Card3DSPage extends StatefulWidget {
 
 class _Card3DSPageState extends State<Card3DSPage> {
   late final WebViewController _controller;
+  late final CardPaymentDatasource _ds;
   bool _loading = true;
   bool _polling = false;
   bool _popped = false;
@@ -38,11 +45,10 @@ class _Card3DSPageState extends State<Card3DSPage> {
   int _statusPollCount = 0;
   static const int _maxBackgroundPolls = 120;
 
-  final _ds = CardPaymentRemoteDatasource();
-
   @override
   void initState() {
     super.initState();
+    _ds = widget.cardPaymentDatasource ?? CardPaymentRemoteDatasource();
     _controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setUserAgent(

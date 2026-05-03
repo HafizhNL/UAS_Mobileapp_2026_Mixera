@@ -8,7 +8,10 @@ import '../../data/models/tryon_api_models.dart';
 enum TryOnGenState { idle, submitting, polling, done, failed }
 
 class TryOnController extends GetxController {
-  final TryOnRemoteDatasource _ds = TryOnRemoteDatasource();
+  TryOnController({TryOnDatasource? datasource})
+      : _ds = datasource ?? TryOnRemoteDatasource();
+
+  final TryOnDatasource _ds;
 
   final personImages      = <PersonProfileImageModel>[].obs;
   final isLoadingImages   = false.obs;

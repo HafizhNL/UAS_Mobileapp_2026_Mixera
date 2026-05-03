@@ -8,7 +8,10 @@ import '../../../profile/presentation/pages/profile_page.dart';
 import '../../../shop/presentation/pages/shop_page.dart';
 
 class MainShellPage extends StatefulWidget {
-  const MainShellPage({super.key});
+  const MainShellPage({super.key, this.tabBodies});
+
+  /// When non-null (e.g. tests), replaces the five default tab roots. Must have length 5.
+  final List<Widget>? tabBodies;
 
   @override
   State<MainShellPage> createState() => _MainShellPageState();
@@ -17,13 +20,14 @@ class MainShellPage extends StatefulWidget {
 class _MainShellPageState extends State<MainShellPage> {
   int _selectedIndex = 0;
 
-  late final List<Widget> _pages = [
-    const HomePage(),
-    const WardrobePage(),
-    const MixMatchPage(),
-    const ShopPage(),
-    const ProfilePage(),
-  ];
+  late final List<Widget> _pages = widget.tabBodies ??
+      const [
+        HomePage(),
+        WardrobePage(),
+        MixMatchPage(),
+        ShopPage(),
+        ProfilePage(),
+      ];
 
   void _onNavTap(int index) {
     if (_selectedIndex == index) return;

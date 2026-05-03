@@ -5,7 +5,10 @@ import '../../data/models/cart_item_model.dart';
 import '../../data/models/cart_summary_model.dart';
 
 class CartController extends GetxController {
-  final _ds = CartRemoteDatasource();
+  CartController({CartDatasource? datasource})
+      : _ds = datasource ?? CartRemoteDatasource();
+
+  final CartDatasource _ds;
 
   final cart = Rxn<CartSummaryModel>();
   final isLoading = false.obs;

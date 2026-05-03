@@ -28,9 +28,20 @@ final _paymentMethods = [
 ];
 
 class CheckoutController extends GetxController {
-  final _ds = CheckoutRemoteDatasource();
-  final _cardDs = CardPaymentRemoteDatasource();
-  final _cartQuoteDs = CartRemoteDatasource();
+  CheckoutController({
+    CheckoutDatasource? checkoutDatasource,
+    CardPaymentDatasource? cardPaymentDatasource,
+    CartDatasource? cartDatasource,
+    WalletDatasource? walletDatasource,
+  })  : _ds = checkoutDatasource ?? CheckoutRemoteDatasource(),
+        _cardDs = cardPaymentDatasource ?? CardPaymentRemoteDatasource(),
+        _cartQuoteDs = cartDatasource ?? CartRemoteDatasource(),
+        _walletDs = walletDatasource ?? WalletRemoteDatasource();
+
+  final CheckoutDatasource _ds;
+  final CardPaymentDatasource _cardDs;
+  final CartDatasource _cartQuoteDs;
+  final WalletDatasource _walletDs;
 
   final selectedAddressId = Rxn<int>();
   final selectedPaymentMethod = 'wallet'.obs;
@@ -43,7 +54,6 @@ class CheckoutController extends GetxController {
 
   // Wallet balance
   final walletBalance = Rxn<int>();
-  final _walletDs = WalletRemoteDatasource();
 
   // Saved cards
   final savedCards = <SavedCardModel>[].obs;

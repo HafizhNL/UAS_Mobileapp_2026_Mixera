@@ -5,7 +5,12 @@ import '../../../../core/network/authenticated_dio.dart';
 import '../models/checkout_request_model.dart';
 import '../models/order_model.dart';
 
-class CheckoutRemoteDatasource {
+abstract class CheckoutDatasource {
+  Future<OrderModel> checkout(CheckoutRequestModel request);
+  Future<List<OrderModel>> getOrders();
+}
+
+class CheckoutRemoteDatasource implements CheckoutDatasource {
   CheckoutRemoteDatasource()
       : _dio = createAuthenticatedDio(baseUrl: ApiBaseUrl.module('orders'));
 

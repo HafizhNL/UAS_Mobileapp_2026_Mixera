@@ -4,7 +4,10 @@ import '../../data/datasources/wardrobe_remote_datasource.dart';
 import '../../data/models/wardrobe_api_models.dart';
 
 class WardrobeController extends GetxController {
-  final WardrobeRemoteDatasource _ds = WardrobeRemoteDatasource();
+  WardrobeController({WardrobeDatasource? datasource})
+      : _ds = datasource ?? WardrobeRemoteDatasource();
+
+  final WardrobeDatasource _ds;
 
   final categorySummary = <WardrobeCategorySummaryEntry>[].obs;
   final categoryItems = <WardrobeItemApiModel>[].obs;

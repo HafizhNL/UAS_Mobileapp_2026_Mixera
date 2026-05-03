@@ -4,8 +4,24 @@ import '../../../../core/network/api_base_url.dart';
 import '../../../../core/network/authenticated_dio.dart';
 import '../models/tryon_api_models.dart';
 
+abstract class TryOnDatasource {
+  Future<List<PersonProfileImageModel>> listPersonImages();
+  Future<PersonProfileImageModel> uploadPersonImage(String filePath, {String label, bool setActive});
+  Future<PersonProfileImageModel> activatePersonImage(int imageId);
+  Future<void> archivePersonImage(int imageId);
+  Future<TryOnRequestDetailModel> createTryOnRequest({
+    required int personImageId,
+    required TryOnSourceKind sourceType,
+    int? mixResultId,
+    int? shopProductId,
+  });
+  Future<TryOnRequestDetailModel> getTryOnRequest(int requestId);
+  Future<List<TryOnSavedEntryModel>> listSavedTryOnResults();
+  Future<bool> toggleTryOnSave(int resultId);
+}
+
 /// OpenAI try-on can run well over 60s; short timeouts cause client disconnect → server "Broken pipe".
-class TryOnRemoteDatasource {
+class TryOnRemoteDatasource implements TryOnDatasource {
   TryOnRemoteDatasource()
       : _dio = createAuthenticatedDio(
           baseUrl: ApiBaseUrl.module('tryon'),

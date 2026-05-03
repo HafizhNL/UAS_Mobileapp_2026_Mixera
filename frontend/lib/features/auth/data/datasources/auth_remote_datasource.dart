@@ -2,7 +2,23 @@ import 'package:dio/dio.dart';
 
 import '../../../../core/network/api_base_url.dart';
 
-class AuthRemoteDatasource {
+abstract class AuthDatasource {
+  Future<Map<String, dynamic>> login(String email, String password);
+  Future<Map<String, dynamic>> register(String email, String username, String phone, String password);
+  Future<Map<String, dynamic>> verifyOtp(String email, String code);
+  Future<Map<String, dynamic>> forgotPassword(String email);
+  Future<Map<String, dynamic>> resetPassword({
+    required String email,
+    required String code,
+    required String newPassword,
+    required String confirmPassword,
+  });
+  Future<Map<String, dynamic>> loginWithGoogle(String idToken);
+  Future<Map<String, dynamic>> refreshTokens({required String refresh});
+  Future<Map<String, dynamic>> loginWithFacebook(String accessToken);
+}
+
+class AuthRemoteDatasource implements AuthDatasource {
   AuthRemoteDatasource()
       : dio = Dio(
           BaseOptions(

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_text_styles.dart';
+import '../../domain/register_password_rules.dart';
 import '../controllers/auth_controller.dart';
 import '../widgets/social_login_buttons.dart';
 import '../../../../app/routes/route_names.dart';
@@ -15,18 +16,12 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  bool get _hasMinLength =>
-      Get.find<AuthController>().passwordController.text.length >= 8;
-  bool get _hasNumber =>
-      Get.find<AuthController>().passwordController.text.contains(RegExp(r'\d'));
-  bool get _hasSymbol => Get.find<AuthController>()
-      .passwordController
-      .text
-      .contains(RegExp(r'[!@#\$%^&*(),.?":{}|<>]'));
-  bool get _hasMixedCase {
-    final pw = Get.find<AuthController>().passwordController.text;
-    return pw.contains(RegExp(r'[a-z]')) && pw.contains(RegExp(r'[A-Z]'));
-  }
+  String get _pw => Get.find<AuthController>().passwordController.text;
+
+  bool get _hasMinLength => RegisterPasswordRules.hasMinLength(_pw);
+  bool get _hasNumber => RegisterPasswordRules.hasNumber(_pw);
+  bool get _hasSymbol => RegisterPasswordRules.hasSymbol(_pw);
+  bool get _hasMixedCase => RegisterPasswordRules.hasMixedCase(_pw);
 
   @override
   Widget build(BuildContext context) {

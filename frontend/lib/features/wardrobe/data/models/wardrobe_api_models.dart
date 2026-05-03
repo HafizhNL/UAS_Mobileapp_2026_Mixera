@@ -28,11 +28,11 @@ const kWardrobeCategorySlugOrder = <String>[
 ];
 
 String resolveMediaUrl(String? pathOrUrl, {String? origin}) {
-  final base = origin ?? ApiBaseUrl.origin;
   if (pathOrUrl == null || pathOrUrl.isEmpty) return '';
   if (pathOrUrl.startsWith('http://') || pathOrUrl.startsWith('https://')) {
     return pathOrUrl;
   }
+  final base = origin ?? ApiBaseUrl.origin;
   if (pathOrUrl.startsWith('/')) return '$base$pathOrUrl';
   return '$base/$pathOrUrl';
 }

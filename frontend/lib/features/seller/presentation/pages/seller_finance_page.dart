@@ -6,7 +6,6 @@ import 'package:share_plus/share_plus.dart';
 
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_text_styles.dart';
-import '../../data/datasources/seller_remote_datasource.dart';
 import '../controllers/seller_controller.dart';
 
 /// Ringkasan mutasi, payout, stub ongkir, export CSV pendapatan.
@@ -45,7 +44,7 @@ class _SellerFinancePageState extends State<SellerFinancePage> {
   }
 
   Future<void> _reloadLists() async {
-    final api = SellerRemoteDatasource();
+    final api = Get.find<SellerController>().sellerDatasource;
     setState(() {
       _loadingEarnings = true;
       _loadingPayouts = true;
@@ -113,7 +112,8 @@ class _SellerFinancePageState extends State<SellerFinancePage> {
     if (_exportingCsv) return;
     setState(() => _exportingCsv = true);
     try {
-      final csv = await SellerRemoteDatasource().downloadEarningsCsv();
+      final csv =
+          await Get.find<SellerController>().sellerDatasource.downloadEarningsCsv();
       final stamp = DateTime.now().toUtc().toIso8601String().split('.').first.replaceAll(':', '');
       final fileName = 'mixera_pendapatan_$stamp.csv';
       final file = File('${Directory.systemTemp.path}/$fileName');
@@ -144,7 +144,7 @@ class _SellerFinancePageState extends State<SellerFinancePage> {
   Future<void> _stubQuote() async {
     final w = int.tryParse(_weight.text.trim()) ?? 500;
     try {
-      final res = await SellerRemoteDatasource().postShippingQuote(
+      final res = await Get.find<SellerController>().sellerDatasource.postShippingQuote(
         weightGrams: w,
         destinationCity: _city.text.trim(),
         destinationPostalCode: _postal.text.trim(),

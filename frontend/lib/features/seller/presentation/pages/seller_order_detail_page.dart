@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_text_styles.dart';
-import '../../data/datasources/seller_remote_datasource.dart';
 import '../controllers/seller_controller.dart';
 
 class SellerOrderDetailPage extends StatefulWidget {
@@ -15,7 +14,6 @@ class SellerOrderDetailPage extends StatefulWidget {
 }
 
 class _SellerOrderDetailPageState extends State<SellerOrderDetailPage> {
-  final _api = SellerRemoteDatasource();
   final _tracking = TextEditingController();
   final _courier = TextEditingController();
   Map<String, dynamic>? _order;
@@ -50,7 +48,7 @@ class _SellerOrderDetailPageState extends State<SellerOrderDetailPage> {
   Future<void> _load() async {
     setState(() => _loading = true);
     try {
-      final o = await _api.getOrder(widget.orderId);
+      final o = await Get.find<SellerController>().sellerDatasource.getOrder(widget.orderId);
       _tracking.text = o['tracking_number'] as String? ?? '';
       _courier.text = o['shipping_courier'] as String? ?? '';
       _order = o;

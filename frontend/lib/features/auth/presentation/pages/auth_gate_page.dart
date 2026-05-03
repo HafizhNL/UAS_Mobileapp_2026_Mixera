@@ -9,8 +9,29 @@ import '../../../../core/storage/token_storage.dart';
 import '../../../profile/data/datasources/profile_remote_datasource.dart';
 import '../../../profile/data/models/profile_model.dart';
 
+/// Optional dependencies for [AuthGatePage] (widget / integration tests).
+/// Any callback left null uses the normal production implementation.
+class AuthGateOverrides {
+  const AuthGateOverrides({
+    this.hasToken,
+    this.ensureBiometricUnlocked,
+    this.getProfile,
+    this.tryRefreshSession,
+    this.clearAccessTokens,
+  });
+
+  final Future<bool> Function()? hasToken;
+  final Future<bool> Function()? ensureBiometricUnlocked;
+  final Future<ProfileModel> Function()? getProfile;
+  final Future<bool> Function()? tryRefreshSession;
+  final Future<void> Function()? clearAccessTokens;
+}
+
 class AuthGatePage extends StatefulWidget {
-  const AuthGatePage({super.key});
+  const AuthGatePage({super.key, this.overrides});
+
+  /// Non-null in tests; production uses `const AuthGatePage()`.
+  final AuthGateOverrides? overrides;
 
   @override
   State<AuthGatePage> createState() => _AuthGatePageState();
@@ -35,22 +56,51 @@ class _AuthGatePageState extends State<AuthGatePage> {
     }
   }
 
+  Future<bool> _readHasToken() async {
+    final o = widget.overrides?.hasToken;
+    if (o != null) return o();
+    return TokenStorage.hasToken();
+  }
+
+  Future<ProfileModel> _fetchProfile() async {
+    final o = widget.overrides?.getProfile;
+    if (o != null) return o();
+    return ProfileRemoteDatasource().getProfile();
+  }
+
+  Future<bool> _tryRefreshSession() async {
+    final o = widget.overrides?.tryRefreshSession;
+    if (o != null) return o();
+    return TokenRefreshHelper.tryRefresh();
+  }
+
+  Future<void> _clearAccessTokens() async {
+    final o = widget.overrides?.clearAccessTokens;
+    if (o != null) {
+      await o();
+      return;
+    }
+    await TokenStorage.clearTokens();
+  }
+
   Future<bool> _ensureBiometricUnlocked() async {
+    final o = widget.overrides?.ensureBiometricUnlocked;
+    if (o != null) return o();
     if (!await BiometricLockStorage.isLockEnabled()) return true;
     return AppBiometricAuth.instance.authenticateToUnlock();
   }
 
   Future<void> _loadProfileAndRoute() async {
     try {
-      final profile = await ProfileRemoteDatasource().getProfile();
+      final profile = await _fetchProfile();
       if (!mounted) return;
       _routeBySeller(profile);
     } on SessionUnauthorizedException {
-      final refreshed = await TokenRefreshHelper.tryRefresh();
+      final refreshed = await _tryRefreshSession();
       if (!mounted) return;
       if (refreshed) {
         try {
-          final profile = await ProfileRemoteDatasource().getProfile();
+          final profile = await _fetchProfile();
           if (!mounted) return;
           _routeBySeller(profile);
           return;
@@ -66,7 +116,7 @@ class _AuthGatePageState extends State<AuthGatePage> {
           return;
         }
       }
-      await TokenStorage.clearTokens();
+      await _clearAccessTokens();
       if (!mounted) return;
       Navigator.pushReplacementNamed(context, RouteNames.login);
     } catch (_) {
@@ -86,7 +136,7 @@ class _AuthGatePageState extends State<AuthGatePage> {
       _loading = true;
     });
 
-    final hasToken = await TokenStorage.hasToken();
+    final hasToken = await _readHasToken();
 
     if (!mounted) return;
 
@@ -127,7 +177,7 @@ class _AuthGatePageState extends State<AuthGatePage> {
   }
 
   Future<void> _exitBiometricLock() async {
-    await TokenStorage.clearTokens();
+    await _clearAccessTokens();
     await BiometricLockStorage.setLockEnabled(false);
     if (!mounted) return;
     Navigator.pushReplacementNamed(context, RouteNames.login);

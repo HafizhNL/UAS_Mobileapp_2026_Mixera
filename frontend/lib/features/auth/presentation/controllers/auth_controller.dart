@@ -12,13 +12,37 @@ import '../../../../core/storage/token_storage.dart';
 import '../../../../core/services/fcm_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+/// Persists access/refresh tokens after email or social login. Production uses
+/// [TokenStorage] + FCM; tests may pass a no-op or in-memory fake.
+typedef LoginTokensPersistence = Future<void> Function(
+  String accessToken,
+  String refreshToken,
+);
+
 class AuthController extends GetxController {
-  final AuthRemoteDatasource _api = AuthRemoteDatasource();
+  AuthController({
+    AuthDatasource? datasource,
+    LoginTokensPersistence? persistLoginTokens,
+  })  : _api = datasource ?? AuthRemoteDatasource(),
+        _persistLoginTokens = persistLoginTokens;
+
+  final AuthDatasource _api;
+  final LoginTokensPersistence? _persistLoginTokens;
   final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
 
   // Stores the init future so continueWithGoogle can await it.
   // google_sign_in v7 requires initialize() to complete before authenticate().
   Future<void>? _initFuture;
+
+  Future<void> _persistAppLoginTokens(String access, String refresh) async {
+    final persist = _persistLoginTokens;
+    if (persist != null) {
+      await persist(access, refresh);
+      return;
+    }
+    await TokenStorage.saveTokens(accessToken: access, refreshToken: refresh);
+    FcmService.registerAfterLogin();
+  }
 
   Future<void> initGoogleSignIn() async {
     await _googleSignIn.initialize(
@@ -54,8 +78,7 @@ class AuthController extends GetxController {
         throw Exception('Token aplikasi tidak ditemukan dari server');
       }
 
-      await TokenStorage.saveTokens(accessToken: access, refreshToken: refresh);
-      FcmService.registerAfterLogin();
+      await _persistAppLoginTokens(access, refresh);
       debugPrint('ACCESS TOKEN: $access');
       debugPrint('REFRESH TOKEN: $refresh');
       debugPrint('USER Login');
@@ -104,8 +127,7 @@ class AuthController extends GetxController {
       throw Exception('Token aplikasi tidak ditemukan dari server');
     }
 
-    await TokenStorage.saveTokens(accessToken: access, refreshToken: refresh);
-    FcmService.registerAfterLogin();
+    await _persistAppLoginTokens(access, refresh);
 
     final savedAccess = await TokenStorage.getAccessToken();
     debugPrint('FB STEP 5: saved access = $savedAccess');
@@ -225,8 +247,7 @@ class AuthController extends GetxController {
         throw Exception('Token tidak ditemukan dari server');
       }
 
-      await TokenStorage.saveTokens(accessToken: access, refreshToken: refresh);
-      FcmService.registerAfterLogin();
+      await _persistAppLoginTokens(access, refresh);
 
       if (!context.mounted) return;
       _showSnackbar(context, 'Login Berhasil!', true);

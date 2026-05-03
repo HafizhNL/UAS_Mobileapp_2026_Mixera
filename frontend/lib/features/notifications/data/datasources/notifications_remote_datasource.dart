@@ -4,7 +4,14 @@ import '../../../../core/network/api_base_url.dart';
 import '../../../../core/network/authenticated_dio.dart';
 import '../models/notification_item_model.dart';
 
-class NotificationsRemoteDatasource {
+abstract class NotificationsDatasource {
+  Future<List<NotificationItemModel>> getNotifications();
+  Future<int> getUnreadCount();
+  Future<void> markRead({bool all = false, int? id});
+  Future<void> registerFcmToken(String token);
+}
+
+class NotificationsRemoteDatasource implements NotificationsDatasource {
   NotificationsRemoteDatasource()
       : _dio = createAuthenticatedDio(
           baseUrl: ApiBaseUrl.module('users'),

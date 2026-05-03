@@ -3,7 +3,6 @@ plugins {
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
-    id("com.google.gms.google-services")
 }
 dependencies {
   // Import the Firebase BoM
@@ -56,4 +55,15 @@ android {
 
 flutter {
     source = "../.."
+}
+
+// `android/app/google-services.json` is gitignored. Apply the plugin only when the file exists
+// so `assembleDebug`, `integration_test`, and CI can build without a copied Firebase config.
+if (file("google-services.json").exists()) {
+    apply(plugin = "com.google.gms.google-services")
+} else {
+    logger.warn(
+        "google-services.json not found under android/app — skipping com.google.gms.google-services. " +
+            "Add the file from Firebase / flutterfire for full Android Firebase wiring.",
+    )
 }

@@ -13,6 +13,7 @@ import '../../../checkout/presentation/controllers/checkout_controller.dart';
 import '../../../checkout/presentation/pages/card_3ds_page.dart';
 import '../../../checkout/presentation/pages/card_tokenize_page.dart';
 import '../controllers/wallet_controller.dart';
+import '../utils/thousand_separator_input_formatter.dart';
 
 sealed class _CardTopUpPick {}
 
@@ -371,7 +372,7 @@ class _AmountFieldState extends State<_AmountField> {
       keyboardType: TextInputType.number,
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
-        _ThousandSeparatorFormatter(),
+        const ThousandSeparatorInputFormatter(),
       ],
       style: AppTextStyles.headline.copyWith(fontSize: 22),
       decoration: InputDecoration(
@@ -398,29 +399,6 @@ class _AmountFieldState extends State<_AmountField> {
             const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       ),
       onChanged: widget.onChanged,
-    );
-  }
-}
-
-/// Formats digits as thousands-separated (e.g. 600000 → "600.000")
-class _ThousandSeparatorFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
-    final digits = newValue.text.replaceAll('.', '');
-    if (digits.isEmpty) return newValue.copyWith(text: '');
-
-    final buffer = StringBuffer();
-    int count = 0;
-    for (int i = digits.length - 1; i >= 0; i--) {
-      if (count > 0 && count % 3 == 0) buffer.write('.');
-      buffer.write(digits[i]);
-      count++;
-    }
-    final formatted = buffer.toString().split('').reversed.join();
-    return TextEditingValue(
-      text: formatted,
-      selection: TextSelection.collapsed(offset: formatted.length),
     );
   }
 }

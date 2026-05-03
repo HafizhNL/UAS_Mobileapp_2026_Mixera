@@ -8,7 +8,47 @@ import '../models/address_model.dart';
 import '../models/address_suggestion_model.dart';
 import '../models/notification_settings_model.dart';
 
-class ProfileRemoteDatasource {
+abstract class ProfileDatasource {
+  Future<ProfileModel> getProfile();
+  Future<ProfileModel> updateProfile({required String username, required String? phoneNumber});
+  Future<ProfileModel> requestEmailChange(String newEmail);
+  Future<ProfileModel> confirmEmailChange(String code);
+  Future<ProfileModel> cancelEmailChange();
+  Future<void> changePassword({required String currentPassword, required String newPassword});
+  Future<List<AddressModel>> getAddresses();
+  Future<AddressModel> createAddress({
+    required String label,
+    required String recipientName,
+    required String phoneNumber,
+    required String streetAddress,
+    required String city,
+    required String state,
+    required String postalCode,
+    required bool isPrimary,
+  });
+  Future<AddressModel> updateAddress({
+    required int id,
+    required String label,
+    required String recipientName,
+    required String phoneNumber,
+    required String streetAddress,
+    required String city,
+    required String state,
+    required String postalCode,
+    required bool isPrimary,
+  });
+  Future<void> deleteAddress(int id);
+  Future<NotificationSettingsModel> getNotificationSettings();
+  Future<NotificationSettingsModel> updateNotificationSettings({
+    required bool orderUpdates,
+    required bool promotions,
+    required bool securityAlerts,
+    required bool dailyReminders,
+  });
+  Future<List<AddressSuggestionModel>> searchAddressSuggestions(String query);
+}
+
+class ProfileRemoteDatasource implements ProfileDatasource {
   ProfileRemoteDatasource()
       : dio = createAuthenticatedDio(baseUrl: ApiBaseUrl.module('users')),
         _geoDio = Dio(

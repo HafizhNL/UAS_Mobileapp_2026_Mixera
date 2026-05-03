@@ -23,7 +23,28 @@ class CardChargeApiException implements Exception {
   String toString() => message;
 }
 
-class CardPaymentRemoteDatasource {
+abstract class CardPaymentDatasource {
+  Future<CardChargeResultModel> chargeCard({
+    required int orderId,
+    String cardToken,
+    int? savedCardId,
+    bool saveCard,
+    bool retryThreeDs,
+  });
+  Future<CardChargeResultModel> chargeWalletTopUp({
+    required int amount,
+    String cardToken,
+    int? savedCardId,
+    bool saveCard,
+    bool retryThreeDs,
+  });
+  Future<List<SavedCardModel>> getSavedCards();
+  Future<void> setDefaultCard(int id);
+  Future<void> deleteCard(int id);
+  Future<Map<String, dynamic>> getTransactionStatus(String midtransOrderId);
+}
+
+class CardPaymentRemoteDatasource implements CardPaymentDatasource {
   CardPaymentRemoteDatasource()
       : _dio = createAuthenticatedDio(
           baseUrl: ApiBaseUrl.module('payments'),

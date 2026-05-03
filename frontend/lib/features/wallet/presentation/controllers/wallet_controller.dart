@@ -8,8 +8,12 @@ import '../../data/models/wallet_model.dart';
 import '../../data/models/wallet_transaction_model.dart';
 
 class WalletController extends GetxController {
-  final WalletRemoteDatasource _walletRemote = WalletRemoteDatasource();
-  final CardPaymentRemoteDatasource _cardPaymentRemote = CardPaymentRemoteDatasource();
+  WalletController({WalletDatasource? walletDatasource, CardPaymentDatasource? cardPaymentDatasource})
+      : _walletRemote = walletDatasource ?? WalletRemoteDatasource(),
+        _cardPaymentRemote = cardPaymentDatasource ?? CardPaymentRemoteDatasource();
+
+  final WalletDatasource _walletRemote;
+  final CardPaymentDatasource _cardPaymentRemote;
 
   final wallet = Rxn<WalletModel>();
   final transactions = <WalletTransactionModel>[].obs;

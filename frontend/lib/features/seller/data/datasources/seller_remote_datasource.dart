@@ -5,7 +5,60 @@ import '../../../../core/network/authenticated_dio.dart';
 import '../../../shop/data/models/product_detail_model.dart';
 import '../../../shop/data/models/product_model.dart';
 
-class SellerRemoteDatasource {
+abstract class SellerDatasource {
+  Future<Map<String, dynamic>> getMe();
+  Future<void> patchMe({required String storeName, required String shipFromPostalCode});
+  Future<Map<String, dynamic>> getDashboard();
+  Future<List<Map<String, dynamic>>> getFinanceEarnings({String? from, String? to});
+  Future<List<Map<String, dynamic>>> getFinancePayouts();
+  Future<Map<String, dynamic>> postPayout(int amount);
+  Future<String> downloadEarningsCsv();
+  Future<List<Map<String, dynamic>>> getNotifications();
+  Future<void> markNotificationsRead({bool all, int? id});
+  Future<Map<String, dynamic>> postShippingQuote({
+    required int weightGrams,
+    String destinationCity,
+    String destinationPostalCode,
+  });
+  Future<List<Map<String, dynamic>>> getChannelListings();
+  Future<Map<String, dynamic>> postChannelListing({required int productId, required String channel});
+  Future<List<ProductModel>> getMyProducts();
+  Future<String> uploadProductImage(String filePath);
+  Future<ProductModel> createProduct({
+    required String name,
+    required int price,
+    String description,
+    int? discountPrice,
+    String color,
+    int stock,
+    String size,
+    String imageUrl,
+    List<Map<String, dynamic>>? variants,
+  });
+  Future<ProductDetailModel> getSellerProduct(int id);
+  Future<ProductModel> patchProduct(int id, {
+    String? name,
+    int? price,
+    int? discountPrice,
+    bool clearDiscountPrice,
+    String? description,
+    String? color,
+    int? stock,
+    bool? isActive,
+    String? imageUrl,
+    List<Map<String, int>>? variantStocks,
+    List<Map<String, dynamic>>? variantsAdd,
+  });
+  Future<List<Map<String, dynamic>>> getOrders({String? status});
+  Future<Map<String, dynamic>> getOrder(int id);
+  Future<Map<String, dynamic>> updateOrderShipping(int id, {
+    String? trackingNumber,
+    String? shippingCourier,
+    String? status,
+  });
+}
+
+class SellerRemoteDatasource implements SellerDatasource {
   SellerRemoteDatasource()
       : _dio = createAuthenticatedDio(
           baseUrl: ApiBaseUrl.module('sellers'),

@@ -5,7 +5,12 @@ import '../../../../core/network/authenticated_dio.dart';
 import '../models/wallet_model.dart';
 import '../models/wallet_transaction_model.dart';
 
-class WalletRemoteDatasource {
+abstract class WalletDatasource {
+  Future<WalletModel> getWallet();
+  Future<List<WalletTransactionModel>> getTransactions();
+}
+
+class WalletRemoteDatasource implements WalletDatasource {
   WalletRemoteDatasource()
       : dio = createAuthenticatedDio(baseUrl: ApiBaseUrl.module('wallet'));
 

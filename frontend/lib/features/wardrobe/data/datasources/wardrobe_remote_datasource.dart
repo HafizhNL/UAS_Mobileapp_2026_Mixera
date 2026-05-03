@@ -4,7 +4,18 @@ import '../../../../core/network/api_base_url.dart';
 import '../../../../core/network/authenticated_dio.dart';
 import '../models/wardrobe_api_models.dart';
 
-class WardrobeRemoteDatasource {
+abstract class WardrobeDatasource {
+  Future<UploadBatchDetailModel> createUploadBatch(List<String> imagePaths);
+  Future<UploadBatchDetailModel> getUploadBatchDetail(int batchId);
+  Future<List<DetectedItemCandidateModel>> patchCandidates(int batchId, List<Map<String, dynamic>> candidates);
+  Future<List<WardrobeItemApiModel>> confirmBatch(int batchId);
+  Future<List<WardrobeItemApiModel>> getWardrobeItems({String? category});
+  Future<WardrobeItemApiModel> patchItem(int id, {String? name, bool? isFavourite});
+  Future<void> deleteItem(int id);
+  Future<List<WardrobeCategorySummaryEntry>> getCategorySummary();
+}
+
+class WardrobeRemoteDatasource implements WardrobeDatasource {
   WardrobeRemoteDatasource()
       : _dio = createAuthenticatedDio(
           baseUrl: ApiBaseUrl.module('wardrobe'),

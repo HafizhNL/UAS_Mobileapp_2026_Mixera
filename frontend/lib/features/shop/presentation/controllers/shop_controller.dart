@@ -6,7 +6,10 @@ import '../../data/models/product_detail_model.dart';
 import '../../data/models/product_model.dart';
 
 class ShopController extends GetxController {
-  final _ds = ShopRemoteDatasource();
+  ShopController({ShopDatasource? datasource})
+      : _ds = datasource ?? ShopRemoteDatasource();
+
+  final ShopDatasource _ds;
 
   final categories = <CategoryModel>[].obs;
   final products = <ProductModel>[].obs;

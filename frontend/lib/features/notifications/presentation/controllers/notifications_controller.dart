@@ -5,7 +5,10 @@ import '../../data/datasources/notifications_remote_datasource.dart';
 import '../../data/models/notification_item_model.dart';
 
 class NotificationsController extends GetxController with WidgetsBindingObserver {
-  final _ds = NotificationsRemoteDatasource();
+  NotificationsController({NotificationsDatasource? datasource})
+      : _ds = datasource ?? NotificationsRemoteDatasource();
+
+  final NotificationsDatasource _ds;
 
   final notifications = <NotificationItemModel>[].obs;
   final unreadCount = 0.obs;

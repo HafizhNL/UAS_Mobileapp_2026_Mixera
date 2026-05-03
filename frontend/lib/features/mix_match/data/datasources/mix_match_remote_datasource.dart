@@ -4,8 +4,18 @@ import '../../../../core/network/api_base_url.dart';
 import '../../../../core/network/authenticated_dio.dart';
 import '../models/mix_match_api_models.dart';
 
+abstract class MixMatchDatasource {
+  Future<MixSessionModel> createSession();
+  Future<MixSessionModel> getSession(int sessionId);
+  Future<MixSessionModel> selectItems(int sessionId, List<int> itemIds);
+  Future<MixResultDetailModel> generate(int sessionId);
+  Future<MixResultDetailModel> getResult(int resultId);
+  Future<List<MixResultDetailModel>> listSavedMixResults();
+  Future<bool> toggleSaveResult(int resultId);
+}
+
 /// Mix generate runs OpenAI image edit; needs a long receive timeout or the client drops the connection.
-class MixMatchRemoteDatasource {
+class MixMatchRemoteDatasource implements MixMatchDatasource {
   MixMatchRemoteDatasource()
       : _dio = createAuthenticatedDio(
           baseUrl: ApiBaseUrl.module('mixmatch'),

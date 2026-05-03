@@ -101,7 +101,6 @@ class FcmService {
 
   static void _handleTap(RemoteMessage msg) {
     _refreshCount();
-    // TODO: deep-link based on msg.data['order_id'] if needed
   }
 
   static void _onNotifTap(NotificationResponse response) {

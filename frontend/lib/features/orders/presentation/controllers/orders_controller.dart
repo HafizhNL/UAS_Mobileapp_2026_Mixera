@@ -5,7 +5,10 @@ import '../../data/datasources/orders_remote_datasource.dart';
 import '../../data/models/order_status_model.dart';
 
 class OrdersController extends GetxController {
-  final _ds = OrdersRemoteDatasource();
+  OrdersController({OrdersDatasource? datasource})
+      : _ds = datasource ?? OrdersRemoteDatasource();
+
+  final OrdersDatasource _ds;
 
   final orders = <OrderModel>[].obs;
   final isLoading = false.obs;

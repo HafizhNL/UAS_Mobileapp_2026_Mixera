@@ -6,8 +6,16 @@ import '../models/category_model.dart';
 import '../models/product_detail_model.dart';
 import '../models/product_model.dart';
 
+abstract class ShopDatasource {
+  Future<List<CategoryModel>> getCategories();
+  Future<List<ProductModel>> getProducts({String? search, String? category});
+  Future<ProductDetailModel> getProductDetail(String slug);
+  Future<List<ProductModel>> getWishlist();
+  Future<bool> toggleWishlist(int productId);
+}
+
 /// Katalog toko: endpoint umumnya publik; Dio tetap sama agar [API_BASE_URL] konsisten.
-class ShopRemoteDatasource {
+class ShopRemoteDatasource implements ShopDatasource {
   ShopRemoteDatasource()
       : _dio = Dio(
           BaseOptions(

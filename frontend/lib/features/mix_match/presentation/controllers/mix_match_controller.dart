@@ -6,8 +6,12 @@ import '../../data/datasources/mix_match_remote_datasource.dart';
 import '../../data/models/mix_match_api_models.dart';
 
 class MixMatchController extends GetxController {
-  final MixMatchRemoteDatasource _mix = MixMatchRemoteDatasource();
-  final WardrobeRemoteDatasource _wardrobe = WardrobeRemoteDatasource();
+  MixMatchController({MixMatchDatasource? mixDatasource, WardrobeDatasource? wardrobeDatasource})
+      : _mix = mixDatasource ?? MixMatchRemoteDatasource(),
+        _wardrobe = wardrobeDatasource ?? WardrobeRemoteDatasource();
+
+  final MixMatchDatasource _mix;
+  final WardrobeDatasource _wardrobe;
 
   final currentSession = Rxn<MixSessionModel>();
   final currentResult = Rxn<MixResultDetailModel>();

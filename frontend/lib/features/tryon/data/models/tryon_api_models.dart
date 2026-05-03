@@ -3,8 +3,8 @@
 import '../../../../core/network/api_base_url.dart';
 
 String tryonResolveMediaUrl(String? pathOrUrl, {String? origin}) {
-  final base = origin ?? ApiBaseUrl.origin;
   if (pathOrUrl == null || pathOrUrl.isEmpty) return '';
+  final base = origin ?? ApiBaseUrl.origin;
   if (pathOrUrl.startsWith('http://') || pathOrUrl.startsWith('https://')) {
     return pathOrUrl;
   }
