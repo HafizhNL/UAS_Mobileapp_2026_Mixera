@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -103,12 +104,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(8),
                                   child: item.primaryImage != null
-                                      ? Image.network(
-                                          item.primaryImage!,
+                                      ? CachedNetworkImage(
+                                          imageUrl: item.primaryImage!,
                                           width: 60,
                                           height: 60,
                                           fit: BoxFit.cover,
-                                          errorBuilder: (context, error, stack) =>
+                                          errorWidget: (_, __, ___) =>
                                               _imgPlaceholder(),
                                         )
                                       : _imgPlaceholder(),

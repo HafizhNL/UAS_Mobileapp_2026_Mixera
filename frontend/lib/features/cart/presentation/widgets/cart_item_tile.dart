@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../app/theme/app_colors.dart';
@@ -43,12 +44,12 @@ class CartItemTile extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: item.primaryImage != null
-                ? Image.network(
-                    item.primaryImage!,
+                ? CachedNetworkImage(
+                    imageUrl: item.primaryImage!,
                     width: 72,
                     height: 72,
                     fit: BoxFit.cover,
-                    errorBuilder: (context, error, stack) => _imgPlaceholder(),
+                    errorWidget: (_, __, ___) => _imgPlaceholder(),
                   )
                 : _imgPlaceholder(),
           ),

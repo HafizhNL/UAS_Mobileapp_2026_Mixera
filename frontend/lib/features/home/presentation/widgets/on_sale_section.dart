@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../app/theme/app_colors.dart';
@@ -99,10 +100,10 @@ class _SaleCard extends StatelessWidget {
                   ),
                   child: AspectRatio(
                     aspectRatio: 1.0,
-                    child: Image.network(
-                      item.imageUrl,
+                    child: CachedNetworkImage(
+                      imageUrl: item.imageUrl,
                       fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => Container(
+                      errorWidget: (_, __, ___) => Container(
                         color: AppColors.roseMist,
                         child: const Icon(
                           Icons.checkroom_outlined,

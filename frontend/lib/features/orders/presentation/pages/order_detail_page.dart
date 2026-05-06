@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -386,12 +387,12 @@ class _ItemCard extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: item.primaryImage.isNotEmpty
-                ? Image.network(
-                    item.primaryImage,
+                ? CachedNetworkImage(
+                    imageUrl: item.primaryImage,
                     width: 64,
                     height: 64,
                     fit: BoxFit.cover,
-                    errorBuilder: (_, _, _) => _imgPlaceholder(),
+                    errorWidget: (_, __, ___) => _imgPlaceholder(),
                   )
                 : _imgPlaceholder(),
           ),

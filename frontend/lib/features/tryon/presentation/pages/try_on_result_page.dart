@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -305,11 +306,12 @@ class _TryOnResultPageState extends State<TryOnResultPage>
                   ClipRRect(
                     borderRadius: BorderRadius.circular(12),
                     child: url.isNotEmpty
-                        ? Image.network(url,
+                        ? CachedNetworkImage(
+                            imageUrl: url,
                             width: 64,
                             height: 64,
                             fit: BoxFit.cover,
-                            errorBuilder: (_, _, _) => _thumbPh())
+                            errorWidget: (_, __, ___) => _thumbPh())
                         : _thumbPh(),
                   ),
                   const SizedBox(width: 12),
@@ -484,15 +486,12 @@ class _TryOnResultPageState extends State<TryOnResultPage>
                     child: ColoredBox(
                       color: AppColors.roseMist.withValues(alpha: 0.12),
                       child: imgUrl.isNotEmpty
-                          ? Image.network(
-                              imgUrl,
+                          ? CachedNetworkImage(
+                              imageUrl: imgUrl,
                               fit: BoxFit.contain,
                               width: double.infinity,
-                              loadingBuilder: (context, child, progress) {
-                                if (progress == null) return child;
-                                return _resultLoadingBox();
-                              },
-                              errorBuilder: (_, _, _) => _resultPlaceholder(),
+                              placeholder: (_, __) => _resultLoadingBox(),
+                              errorWidget: (_, __, ___) => _resultPlaceholder(),
                             )
                           : _resultPlaceholder(),
                     ),

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../app/theme/app_colors.dart';
@@ -37,10 +38,10 @@ class _ProductImageCarouselState extends State<ProductImageCarousel> {
             itemCount: widget.images.length,
             onPageChanged: (i) => setState(() => _current = i),
             itemBuilder: (_, i) {
-              return Image.network(
-                widget.images[i].imageUrl,
+              return CachedNetworkImage(
+                imageUrl: widget.images[i].imageUrl,
                 fit: BoxFit.contain,
-                errorBuilder: (context, error, stack) => _placeholder(),
+                errorWidget: (_, __, ___) => _placeholder(),
               );
             },
           ),

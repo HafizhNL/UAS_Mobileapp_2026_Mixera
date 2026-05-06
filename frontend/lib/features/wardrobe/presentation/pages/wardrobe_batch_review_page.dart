@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -119,12 +120,12 @@ class _WardrobeBatchReviewPageState extends State<WardrobeBatchReviewPage> {
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(12),
                                   child: thumb.isNotEmpty
-                                      ? Image.network(
-                                          thumb,
+                                      ? CachedNetworkImage(
+                                          imageUrl: thumb,
                                           width: 72,
                                           height: 72,
                                           fit: BoxFit.cover,
-                                          errorBuilder: (context, error, stack) => _placeholderThumb(),
+                                          errorWidget: (_, __, ___) => _placeholderThumb(),
                                         )
                                       : _placeholderThumb(),
                                 ),

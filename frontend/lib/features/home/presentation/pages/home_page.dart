@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -56,7 +57,9 @@ class _HomePageState extends State<HomePage> {
       GetDashboardUseCase(HomeRepositoryImpl(HomeRemoteDataSourceImpl())),
     )..addListener(_onControllerChange);
 
-    _controller.loadDashboard();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _controller.loadDashboard();
+    });
   }
 
   void _onControllerChange() {
@@ -117,18 +120,15 @@ class _HomePageState extends State<HomePage> {
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(20, 56, 20, 0),
-            child: Obx(() {
-              final nc = Get.find<NotificationsController>();
-              return GreetingHeader(
-                greeting: data.greeting,
-                subtitle: data.greetingSubtitle,
-                unreadCount: nc.unreadCount.value,
-                onNotificationTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const NotificationsPage()),
-                ),
-              );
-            }),
+            child: Obx(() => GreetingHeader(
+              greeting: data.greeting,
+              subtitle: data.greetingSubtitle,
+              unreadCount: Get.find<NotificationsController>().unreadCount.value,
+              onNotificationTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const NotificationsPage()),
+              ),
+            )),
           ),
         ),
 
@@ -272,10 +272,10 @@ class _FeaturedBanner extends StatelessWidget {
           SizedBox(
             width: 130,
             height: 160,
-            child: Image.network(
-              banner.imageUrl,
+            child: CachedNetworkImage(
+              imageUrl: banner.imageUrl,
               fit: BoxFit.cover,
-              errorBuilder: (ctx, err, stack) => Container(
+              errorWidget: (_, __, ___) => Container(
                 color: AppColors.roseMist,
                 child: const Icon(
                   Icons.checkroom_outlined,
@@ -411,10 +411,10 @@ class _CompleteItem extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           child: AspectRatio(
             aspectRatio: 1.0,
-            child: Image.network(
-              item.imageUrl,
+            child: CachedNetworkImage(
+              imageUrl: item.imageUrl,
               fit: BoxFit.cover,
-              errorBuilder: (ctx, err, stack) => Container(
+              errorWidget: (_, __, ___) => Container(
                 color: AppColors.roseMist,
                 child: const Icon(
                   Icons.checkroom_outlined,

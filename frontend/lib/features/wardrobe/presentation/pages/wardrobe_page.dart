@@ -257,27 +257,28 @@ class WardrobePage extends StatelessWidget {
                           ),
                         );
                       }
-                      return GridView.builder(
-                        padding: EdgeInsets.zero,
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          mainAxisSpacing: 16,
-                          crossAxisSpacing: 16,
-                          childAspectRatio: 0.85,
-                        ),
-                        itemCount: list.length,
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          final entry = list[index];
-                          final title = _labelForCategory(entry.category);
-                          return _buildCategoryCard(
-                            context,
-                            c,
-                            title,
-                            entry.category,
-                            entry.count,
-                            _iconForCategory(entry.category),
+                      return LayoutBuilder(
+                        builder: (context, constraints) {
+                          final itemWidth = (constraints.maxWidth - 16) / 2;
+                          final itemHeight = itemWidth / 0.85;
+                          return Wrap(
+                            spacing: 16,
+                            runSpacing: 16,
+                            children: list.map((entry) {
+                              final title = _labelForCategory(entry.category);
+                              return SizedBox(
+                                width: itemWidth,
+                                height: itemHeight,
+                                child: _buildCategoryCard(
+                                  context,
+                                  c,
+                                  title,
+                                  entry.category,
+                                  entry.count,
+                                  _iconForCategory(entry.category),
+                                ),
+                              );
+                            }).toList(),
                           );
                         },
                       );

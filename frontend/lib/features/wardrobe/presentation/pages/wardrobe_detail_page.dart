@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -544,12 +545,12 @@ class _WardrobeDetailPageState extends State<WardrobeDetailPage> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12),
               child: url.isNotEmpty
-                  ? Image.network(
-                      url,
+                  ? CachedNetworkImage(
+                      imageUrl: url,
                       height: 96,
                       width: 96,
                       fit: BoxFit.cover,
-                      errorBuilder: (context, error, stack) => _imagePlaceholder(),
+                      errorWidget: (_, __, ___) => _imagePlaceholder(),
                     )
                   : _imagePlaceholder(),
             ),

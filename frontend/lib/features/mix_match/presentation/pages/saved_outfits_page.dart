@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -194,11 +195,11 @@ class _OutfitCard extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: outfit.previewImage != null
-                    ? Image.network(
-                        outfit.previewImage!,
+                    ? CachedNetworkImage(
+                        imageUrl: outfit.previewImage!,
                         width: double.infinity,
                         fit: BoxFit.cover,
-                        errorBuilder: (ctx, err, stack) => _placeholder(),
+                        errorWidget: (_, __, ___) => _placeholder(),
                       )
                     : _placeholder(),
               ),

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../app/routes/route_names.dart';
@@ -86,12 +87,12 @@ class OrderTile extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: firstItem != null && firstItem.primaryImage.isNotEmpty
-                      ? Image.network(
-                          firstItem.primaryImage,
+                      ? CachedNetworkImage(
+                          imageUrl: firstItem.primaryImage,
                           width: 58,
                           height: 58,
                           fit: BoxFit.cover,
-                          errorBuilder: (_, _, _) => _placeholder(),
+                          errorWidget: (_, __, ___) => _placeholder(),
                         )
                       : _placeholder(),
                 ),

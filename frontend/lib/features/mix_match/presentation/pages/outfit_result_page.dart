@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -510,16 +511,13 @@ class _OutfitResultPageState extends State<OutfitResultPage>
     if (preview != null && preview.isNotEmpty) {
       final url = resolveMediaUrl(preview);
       if (url.isNotEmpty) {
-        return Image.network(
-          url,
+        return CachedNetworkImage(
+          imageUrl: url,
           fit: BoxFit.contain,
           width: double.infinity,
           height: double.infinity,
-          loadingBuilder: (context, child, progress) {
-            if (progress == null) return child;
-            return _previewLoadingShimmer();
-          },
-          errorBuilder: (_, _, _) => _itemStripFallback(r.selectedItems),
+          placeholder: (_, __) => _previewLoadingShimmer(),
+          errorWidget: (_, __, ___) => _itemStripFallback(r.selectedItems),
         );
       }
     }
@@ -558,14 +556,13 @@ class _OutfitResultPageState extends State<OutfitResultPage>
           child: Icon(Icons.checkroom, color: AppColors.roseMist, size: 100),
         );
       }
-      return Image.network(
-        url,
+      return CachedNetworkImage(
+        imageUrl: url,
         fit: BoxFit.contain,
         width: double.infinity,
         height: double.infinity,
-        loadingBuilder: (_, child, progress) =>
-            progress == null ? child : _previewLoadingShimmer(),
-        errorBuilder: (_, _, _) => const Center(
+        placeholder: (_, __) => _previewLoadingShimmer(),
+        errorWidget: (_, __, ___) => const Center(
           child: Icon(Icons.checkroom, color: AppColors.roseMist, size: 100),
         ),
       );
@@ -589,10 +586,10 @@ class _OutfitResultPageState extends State<OutfitResultPage>
           return ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: url.isNotEmpty
-                ? Image.network(
-                    url,
+                ? CachedNetworkImage(
+                    imageUrl: url,
                     fit: BoxFit.contain,
-                    errorBuilder: (_, _, _) => Container(
+                    errorWidget: (_, __, ___) => Container(
                       color: AppColors.warmCream,
                       child: const Icon(Icons.checkroom,
                           color: AppColors.roseMist),

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -68,8 +69,8 @@ class FcmService {
     final initial = await _messaging.getInitialMessage();
     if (initial != null) _handleTap(initial);
 
-    // Register token to backend
-    await _registerToken();
+    // Register token to backend — fire-and-forget, does not block startup
+    unawaited(_registerToken());
     _messaging.onTokenRefresh.listen((_) => _registerToken());
   }
 

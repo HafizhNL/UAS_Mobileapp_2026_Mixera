@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -137,11 +138,11 @@ class _SavedCard extends StatelessWidget {
                           alignment: Alignment.center,
                           child: const Icon(Icons.image_not_supported_outlined, color: AppColors.secondaryText),
                         )
-                      : Image.network(
-                          img,
+                      : CachedNetworkImage(
+                          imageUrl: img,
                           fit: BoxFit.cover,
                           width: double.infinity,
-                          errorBuilder: (context, error, stackTrace) => Container(
+                          errorWidget: (_, __, ___) => Container(
                             color: AppColors.roseMist,
                             alignment: Alignment.center,
                             child: const Icon(Icons.broken_image_outlined, color: AppColors.secondaryText),

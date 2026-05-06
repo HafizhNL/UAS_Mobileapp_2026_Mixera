@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -207,11 +208,11 @@ class _SpotlightCard extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: url.isNotEmpty
-                    ? Image.network(
-                        url,
+                    ? CachedNetworkImage(
+                        imageUrl: url,
                         width: double.infinity,
                         fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => _ph(),
+                        errorWidget: (_, __, ___) => _ph(),
                       )
                     : _ph(),
               ),
@@ -402,12 +403,12 @@ class _LatestMixCard extends StatelessWidget {
     if (preview != null && preview.isNotEmpty) {
       final u = resolveMediaUrl(preview);
       if (u.isNotEmpty) {
-        return Image.network(
-          u,
+        return CachedNetworkImage(
+          imageUrl: u,
           fit: BoxFit.contain,
           width: double.infinity,
           height: double.infinity,
-          errorBuilder: (_, __, ___) => _miniVisualFromItems(result.selectedItems),
+          errorWidget: (_, __, ___) => _miniVisualFromItems(result.selectedItems),
         );
       }
     }
@@ -432,12 +433,12 @@ class _LatestMixCard extends StatelessWidget {
         ),
       );
     }
-    return Image.network(
-      u,
+    return CachedNetworkImage(
+      imageUrl: u,
       fit: BoxFit.contain,
       width: double.infinity,
       height: double.infinity,
-      errorBuilder: (_, __, ___) => Container(
+      errorWidget: (_, __, ___) => Container(
         color: AppColors.warmCream,
         child: const Icon(Icons.checkroom, color: AppColors.roseMist, size: 48),
       ),

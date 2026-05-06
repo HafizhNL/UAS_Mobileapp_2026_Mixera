@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
@@ -169,26 +170,20 @@ class _SavedTryOnDetailPageState extends State<SavedTryOnDetailPage> {
                           : InteractiveViewer(
                               minScale: 0.85,
                               maxScale: 3.5,
-                              child: Image.network(
-                                imgUrl,
+                              child: CachedNetworkImage(
+                                imageUrl: imgUrl,
                                 fit: BoxFit.contain,
                                 width: double.infinity,
-                                loadingBuilder: (context, child, progress) {
-                                  if (progress == null) return child;
-                                  return SizedBox(
-                                    height: 220,
-                                    child: Center(
-                                      child: CircularProgressIndicator(
-                                        color: AppColors.blushPink,
-                                        value: progress.expectedTotalBytes != null
-                                            ? progress.cumulativeBytesLoaded /
-                                                progress.expectedTotalBytes!
-                                            : null,
-                                      ),
+                                progressIndicatorBuilder: (_, __, dp) => SizedBox(
+                                  height: 220,
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                      color: AppColors.blushPink,
+                                      value: dp.progress,
                                     ),
-                                  );
-                                },
-                                errorBuilder: (_, __, ___) => SizedBox(
+                                  ),
+                                ),
+                                errorWidget: (_, __, ___) => SizedBox(
                                   height: 200,
                                   child: Center(
                                     child: Icon(Icons.broken_image_outlined,
@@ -281,12 +276,12 @@ class _SavedTryOnDetailPageState extends State<SavedTryOnDetailPage> {
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: u.isNotEmpty
-                  ? Image.network(
-                      u,
+                  ? CachedNetworkImage(
+                      imageUrl: u,
                       width: 52,
                       height: 52,
                       fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => _personPh(),
+                      errorWidget: (_, __, ___) => _personPh(),
                     )
                   : _personPh(),
             ),

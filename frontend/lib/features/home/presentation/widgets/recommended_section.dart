@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../app/theme/app_colors.dart';
@@ -82,11 +83,11 @@ class RecommendedSection extends StatelessWidget {
                           topLeft: Radius.circular(14),
                           topRight: Radius.circular(14),
                         ),
-                        child: Image.network(
-                          item.imageUrl,
+                        child: CachedNetworkImage(
+                          imageUrl: item.imageUrl,
                           width: double.infinity,
                           fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) => Container(
+                          errorWidget: (_, __, ___) => Container(
                             color: AppColors.roseMist,
                             child: const Icon(
                               Icons.checkroom_outlined,

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../app/theme/app_colors.dart';
@@ -71,12 +72,12 @@ class WardrobePreviewSection extends StatelessWidget {
                           final item = items[index];
                           return ClipRRect(
                             borderRadius: BorderRadius.circular(12),
-                            child: Image.network(
-                              item.imageUrl,
+                            child: CachedNetworkImage(
+                              imageUrl: item.imageUrl,
                               width: 80,
                               height: 80,
                               fit: BoxFit.cover,
-                              errorBuilder: (context, error, stack) => Container(
+                              errorWidget: (_, __, ___) => Container(
                                 width: 80,
                                 height: 80,
                                 color: AppColors.roseMist,

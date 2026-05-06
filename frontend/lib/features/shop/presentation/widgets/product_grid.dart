@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -43,11 +44,17 @@ class _ProductCard extends StatefulWidget {
 class _ProductCardState extends State<_ProductCard> {
   late bool _wishlisted;
   bool _busy = false;
+  late final String _priceFormatted;
+  late final String? _discountPriceFormatted;
 
   @override
   void initState() {
     super.initState();
     _wishlisted = widget.product.isWishlisted;
+    _priceFormatted = _formatRupiah(widget.product.price);
+    _discountPriceFormatted = widget.product.discountPrice != null
+        ? _formatRupiah(widget.product.discountPrice!)
+        : null;
   }
 
   @override
@@ -129,11 +136,11 @@ class _ProductCardState extends State<_ProductCard> {
                   ClipRRect(
                     borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
                     child: product.primaryImage != null
-                        ? Image.network(
-                            product.primaryImage!,
+                        ? CachedNetworkImage(
+                            imageUrl: product.primaryImage!,
                             width: double.infinity,
                             fit: BoxFit.cover,
-                            errorBuilder: (ctx, err, stack) => _imagePlaceholder(),
+                            errorWidget: (_, __, ___) => _imagePlaceholder(),
                           )
                         : _imagePlaceholder(),
                   ),
@@ -196,16 +203,16 @@ class _ProductCardState extends State<_ProductCard> {
                     const SizedBox(height: 4),
                     if (product.discountPrice != null) ...[
                       Text(
-                        _formatRupiah(product.price),
+                        _priceFormatted,
                         style: AppTextStyles.small.copyWith(
                           decoration: TextDecoration.lineThrough,
                           color: AppColors.secondaryText,
                         ),
                       ),
-                      Text(_formatRupiah(product.discountPrice!),
+                      Text(_discountPriceFormatted!,
                           style: AppTextStyles.type.copyWith(color: AppColors.blushPink)),
                     ] else
-                      Text(_formatRupiah(product.price),
+                      Text(_priceFormatted,
                           style: AppTextStyles.type.copyWith(color: AppColors.blushPink)),
                   ],
                 ),

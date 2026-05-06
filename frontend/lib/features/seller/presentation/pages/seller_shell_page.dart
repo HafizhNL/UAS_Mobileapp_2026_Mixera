@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -945,13 +946,13 @@ class _ProductsTabState extends State<_ProductsTab> {
                                   borderRadius: BorderRadius.circular(12),
                                   child: p.primaryImage != null &&
                                           p.primaryImage!.isNotEmpty
-                                      ? Image.network(
-                                          resolveMediaUrl(
+                                      ? CachedNetworkImage(
+                                          imageUrl: resolveMediaUrl(
                                               p.primaryImage!),
                                           width: 72,
                                           height: 72,
                                           fit: BoxFit.cover,
-                                          errorBuilder: (_, _, _) =>
+                                          errorWidget: (_, __, ___) =>
                                               _imgPlaceholder(),
                                         )
                                       : _imgPlaceholder(),

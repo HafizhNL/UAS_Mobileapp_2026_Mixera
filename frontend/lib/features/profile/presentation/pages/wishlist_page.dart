@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -127,12 +128,12 @@ class _WishlistTile extends StatelessWidget {
                       alignment: Alignment.center,
                       child: const Icon(Icons.image_outlined, color: AppColors.secondaryText),
                     )
-                  : Image.network(
-                      img,
+                  : CachedNetworkImage(
+                      imageUrl: img,
                       width: 72,
                       height: 72,
                       fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) => Container(
+                      errorWidget: (_, __, ___) => Container(
                         width: 72,
                         height: 72,
                         color: AppColors.roseMist,

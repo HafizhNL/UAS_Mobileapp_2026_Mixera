@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -234,12 +235,12 @@ class _SellerAddProductPageState extends State<SellerAddProductPage> {
                                     fit: BoxFit.cover,
                                   )
                                 : _uploadedImageUrl != null && _uploadedImageUrl!.isNotEmpty
-                                    ? Image.network(
-                                        resolveMediaUrl(_uploadedImageUrl),
+                                    ? CachedNetworkImage(
+                                        imageUrl: resolveMediaUrl(_uploadedImageUrl),
                                         width: 88,
                                         height: 88,
                                         fit: BoxFit.cover,
-                                        errorBuilder: (context, error, stackTrace) => Container(
+                                        errorWidget: (_, __, ___) => Container(
                                           width: 88,
                                           height: 88,
                                           color: AppColors.border,

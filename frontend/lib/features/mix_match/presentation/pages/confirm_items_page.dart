@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -234,11 +235,11 @@ class _ConfirmTile extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: url.isNotEmpty
-                        ? Image.network(
-                            url,
+                        ? CachedNetworkImage(
+                            imageUrl: url,
                             fit: BoxFit.cover,
                             width: double.infinity,
-                            errorBuilder: (_, _, _) => _ph(),
+                            errorWidget: (_, __, ___) => _ph(),
                           )
                         : _ph(),
                   ),

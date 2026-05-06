@@ -20,7 +20,7 @@ class WardrobeRemoteDatasource implements WardrobeDatasource {
       : _dio = createAuthenticatedDio(
           baseUrl: ApiBaseUrl.module('wardrobe'),
           connectTimeout: const Duration(seconds: 60),
-          receiveTimeout: const Duration(seconds: 60),
+          receiveTimeout: const Duration(seconds: 180),
         );
 
   final Dio _dio;

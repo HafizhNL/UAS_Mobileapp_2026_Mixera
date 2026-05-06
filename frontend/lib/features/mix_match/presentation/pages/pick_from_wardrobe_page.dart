@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -296,11 +297,11 @@ class _PickFromWardrobePageState extends State<PickFromWardrobePage> {
         child: const Icon(Icons.checkroom, color: AppColors.roseMist, size: 30),
       );
     }
-    return Image.network(
-      url,
+    return CachedNetworkImage(
+      imageUrl: url,
       fit: BoxFit.cover,
       width: double.infinity,
-      errorBuilder: (_, __, ___) => Container(
+      errorWidget: (_, __, ___) => Container(
         color: AppColors.warmCream,
         child: const Icon(Icons.checkroom, color: AppColors.roseMist, size: 30),
       ),
